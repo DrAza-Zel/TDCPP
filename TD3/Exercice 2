@@ -1,0 +1,62 @@
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
+vector<int> twoSumBruteForce(const vector<int>& numbers, int target) {
+    for (size_t i = 0; i < numbers.size(); i++) {
+        for (size_t j = i + 1; j < numbers.size(); j++) {
+            if (numbers[i] + numbers[j] == target) {
+                return {
+                    static_cast<int>(i),
+                    static_cast<int>(j)
+                };
+            }
+        }
+    }
+
+    return {};
+}
+
+vector<int> twoSumOptimal(const vector<int>& numbers, int target) {
+    unordered_map<int, int> storedNumbers;
+
+    for (size_t i = 0; i < numbers.size(); i++) {
+        int complement = target - numbers[i];
+
+        auto result = storedNumbers.find(complement);
+
+        if (result != storedNumbers.end()) {
+            return {
+                result->second,
+                static_cast<int>(i)
+            };
+        }
+
+        storedNumbers[numbers[i]] = static_cast<int>(i);
+    }
+
+    return {};
+}
+
+void displayResult(const vector<int>& result) {
+    if (result.empty()) {
+        cout << "No solution" << endl;
+    } else {
+        cout << "[" << result[0] << ", " << result[1] << "]" << endl;
+    }
+}
+
+int main() {
+    vector<int> numbers = {2, 7, 11, 15};
+    int target = 9;
+
+    cout << "Brute Force: ";
+    displayResult(twoSumBruteForce(numbers, target));
+
+    cout << "Optimal: ";
+    displayResult(twoSumOptimal(numbers, target));
+
+    return 0;
+}
